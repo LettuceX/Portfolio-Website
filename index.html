@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meier Yi | Game Systems Designer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Meier Yi</div>
+        <div class="nav-links">
+            <a href="#works">Works</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="#experience">Experience</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Game Systems <span>Designer</span></h1>
+            <p>Turning abstract concepts into balanced, emergent gameplay mechanics. Seeking graduate admission for Interactive Media.</p>
+            <a href="#projects" class="btn">View My Portfolio</a>
+        </div>
+    </header>
+
+    <section id="projects" class="container">
+        <h2>Featured Projects</h2>
+        <div class="grid">
+            
+            <div class="card">
+                <div class="card-img img-1"><span>GAMEPLAY GIF</span></div>
+                <div class="card-content">
+                    <span class="card-tag">Systems Design</span>
+                    <h3>Project: Echo Chamber</h3>
+                    <p>A fast-paced combat prototype focused on resource management and weapon synergy.</p>
+                    
+                    <button class="btn" onclick="openProject('projects/project1.html')">View Case Study</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img img-2"><span>LEVEL ART</span></div>
+                <div class="card-content">
+                    <span class="card-tag">Level Design</span>
+                    <h3>Neon Labyrinth</h3>
+                    <p>Procedurally generated dungeon crawler created during the Global Game Jam.</p>
+                    <button class="btn" style="background:#444;">Coming Soon</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img img-3"><span>EXCEL SHEET</span></div>
+                <div class="card-content">
+                    <span class="card-tag">Economy Balance</span>
+                    <h3>RPG Economy Sim</h3>
+                    <p>A pure data simulation for an MMO economy, built in Python and Excel.</p>
+                    <button class="btn" style="background:#444;">Coming Soon</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" style="background-color: #1a1a1a;">
+        <div class="container">
+            <h2>Technical Skills</h2>
+            <div class="skills-wrapper">
+                <div class="skills-container">
+                    <div class="skill-badge">Unity / Unreal (Blueprints)</div>
+                    <div class="skill-badge">Git / Azure</div>
+                    <div class="skill-badge">Jira / Agile</div>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-badge">SQL Databases</div>
+                    <div class="skill-badge">React / Angular</div>
+                    <div class="skill-badge">.NET / Flask</div>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-badge">C / C++ / C#</div>
+                    <div class="skill-badge">Python</div>
+                    <div class="skill-badge">TypeScript</div>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-badge">System Prototyping</div>
+                    <div class="skill-badge">Playtest Analysis</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="container">
+        <h2>Work Experience</h2>
+        
+        <div class="job">
+            <div class="job-header">
+                <h3>Junior Designer</h3>
+                <span class="job-date">2023 - Present</span>
+            </div>
+            <div class="job-role">Indie Studio "Pixel Forge"</div>
+            <ul>
+                <li>Designed and implemented the inventory management system for an unannounced RPG.</li>
+                <li>Reduced player onboarding drop-off by 15% through iterative tutorials.</li>
+                <li>Collaborated with 3 engineers to document API requirements for gameplay tools.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <h3>QA Tester</h3>
+                <span class="job-date">2021 - 2022</span>
+            </div>
+            <div class="job-role">Major Publisher Inc.</div>
+            <ul>
+                <li>Identified over 300 bugs in the physics engine.</li>
+                <li>Created automated scripts to test collision boundaries.</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Meier Yi - Portfolio for Graduate Admission</p>
+    </footer>
+
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            
+            <div id="modal-body-content"></div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+/* --- RESET & BASICS --- */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0; padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+a { text-decoration: none; color: inherit; }
+
+/* --- NAVIGATION --- */
+nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 40px; background-color: #1a1a1a; border-bottom: 1px solid #333;
+}
+.logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
+.nav-links a { margin-left: 20px; color: #aaa; transition: 0.3s; }
+.nav-links a:hover { color: #4facfe; }
+
+/* --- HERO --- */
+.hero { text-align: center; padding: 80px 20px; }
+.hero h1 { font-size: 3rem; margin-bottom: 10px; color: #fff; }
+.hero span { color: #4facfe; }
+.hero p { color: #aaa; margin-bottom: 30px; font-size: 1.2rem; }
+
+/* --- BUTTONS --- */
+.btn {
+    display: inline-block;
+    background-color: #4facfe; color: #fff;
+    padding: 10px 20px; border: none; border-radius: 4px;
+    cursor: pointer; font-weight: bold; margin-top: 10px;
+}
+.btn:hover { background-color: #00f2fe; }
+
+/* --- SECTIONS --- */
+section { padding: 60px 0; border-bottom: 1px solid #222; }
+h2 { text-align: center; margin-bottom: 40px; color: #fff; }
+
+/* --- PROJECT GRID --- */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+.card {
+    background-color: #1e1e1e; border: 1px solid #333;
+    border-radius: 8px; overflow: hidden;
+    transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-5px); border-color: #555; }
+
+.card-img {
+    height: 180px; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #555; background-color: #2a2a2a;
+}
+.card-content { padding: 20px; }
+.card-tag { 
+    font-size: 0.8rem; color: #4facfe; text-transform: uppercase; letter-spacing: 1px;
+}
+.card h3 { margin: 10px 0; color: #fff; }
+.card p { color: #aaa; font-size: 0.95rem; margin-bottom: 15px;}
+
+/* --- SKILLS --- */
+.skills-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.skills-container { text-align: center; }
+.skill-badge {
+    background: #333; padding: 8px 15px; margin: 5px;
+    border-radius: 20px; display: inline-block; font-size: 0.9rem;
+}
+
+/* --- EXPERIENCE --- */
+.job {
+    background: #1e1e1e; padding: 30px; border-radius: 8px;
+    margin-bottom: 20px; border-left: 4px solid #4facfe;
+}
+.job-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.job-header h3 { margin: 0; color: #fff; }
+.job-role { color: #aaa; font-style: italic; margin-bottom: 15px; }
+.job ul { padding-left: 20px; color: #ccc; }
+.job li { margin-bottom: 8px; }
+
+/* --- FOOTER --- */
+footer { text-align: center; padding: 40px; color: #555; font-size: 0.9rem; }
+
+/* --- MODAL (Pop-up) --- */
+.modal {
+    display: none; position: fixed; z-index: 1000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    overflow: auto; background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background-color: #1e1e1e; margin: 5% auto; padding: 40px;
+    border: 1px solid #444; border-radius: 8px; width: 80%; max-width: 800px;
+    position: relative; animation: slideDown 0.3s ease-out;
+}
+.close {
+    color: #aaa; float: right; font-size: 28px; font-weight: bold;
+    cursor: pointer; position: absolute; right: 20px; top: 15px;
+}
+.close:hover { color: #fff; }
+@keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Styles for injected content */
+.highlight-box {
+    background-color: #2d2a1e; border-left: 4px solid #ffd700;
+    padding: 15px; margin: 20px 0; color: #fff;
+}
+.modal-meta span { margin-right: 15px; color: #888; font-size: 0.9rem; }
+.modal-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
