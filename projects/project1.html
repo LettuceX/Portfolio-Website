@@ -1,25 +1,37 @@
 <div class="modal-header">
-    <h2>Project: Echo Chamber</h2>
+    <h2>Control System for Battery Testing (MITS 11)</h2>
     <div class="modal-meta">
-        <span><strong>Role:</strong> Lead Systems Designer</span>
-        <span><strong>Engine:</strong> Unity (C#)</span>
+        <span><strong>Role: </strong>Lead system designer & full stack developer & UX designer</span>
         <span><strong>Team:</strong> 4 People</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Architecture: </strong>Event-Driven, Client-Server, Cloud-Native</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Key Technologies: </strong>Apache Kafka, TCP/IP, WebSockets, SQL/Cloud DB, Python/C# (Backend), React/Vue (Frontend)</span>
     </div>
 </div>
 
-<h3>1. The Design Problem</h3>
-<p>Players were spamming the "Fireball" ability because it had the highest damage-per-second (DPS), ignoring the melee mechanics entirely. This made combat repetitive and boring.</p>
+<h3>Project Description</h3>
+<p>This project involved re-architecting a legacy desktop-based testing solution into a scalable, web-based distributed system capable of orchestrating simultaneous hardware tests across geographically separated machines.</p>
 
-<div class="highlight-box">
+<!-- <div class="highlight-box">
     <strong>My Goal:</strong> Force players to swap weapons every 5 seconds to maintain optimal damage output.
-</div>
+</div> -->
 
-<h3>2. The Solution: Momentum System</h3>
-<p>I designed a "Momentum" resource bar:</p>
+<h3>1. Architecture: Event-Driven Topology</h3>
+<p>Transformed the system from a synchronous 1-to-1 control model to an asynchronous 1-to-Many distributed topology.</p>
 <ul style="margin-left: 20px; margin-bottom: 20px;">
-    <li><strong>Melee Attacks:</strong> Generate Momentum.</li>
-    <li><strong>Ranged Attacks:</strong> Consume Momentum.</li>
-    <li><strong>Result:</strong> If a player spams Fireball, they run out of energy and deal 0 damage until they go back into Melee range.</li>
+    <li><strong>Decoupled Communication: </strong>Implemented Apache Kafka as the central message backbone. The web server functions as a producer, broadcasting control commands to specific Kafka topics.</li>
+    <li><strong>Distributed Consumption: </strong>Physical test stations act as consumers, subscribing to relevant topics to receive instructions and publishing telemetry data back to the cloud database.</li>
+    <li><strong>Scalability: </strong>This architecture eliminated thread-blocking on the main server, allowing the system to scale to control hundreds of machines without performance degradation.</li>
+</ul>
+
+<h3>2. Resource Management: Concurrency & Channel Bundling</h3>
+<p>Developed the "Task Engine" to abstract physical hardware ports into logical test units.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Hardware Abstraction: </strong>Designed a scheduling system that allows users to bundle independent testing channels—residing on different physical machines—into a single logical "Task."</li>
+    <li><strong>Concurrency Control: </strong>Implemented locking mechanisms and state management to ensure thread safety when multiple users attempt to reserve or control the same hardware channels simultaneously.</li>
 </ul>
 
 <div class="video-container" style="background: #000; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 4px;">
