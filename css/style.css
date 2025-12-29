@@ -9,6 +9,18 @@ body {
 .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 a { text-decoration: none; color: inherit; }
 
+.image-container {
+    display: flex;               
+    justify-content: center;     
+    align-items: center;         
+    width: 100%;           
+}
+
+.image-container img {
+    max-width: 100%;            
+    height: auto;               
+}
+
 /* --- NAVIGATION --- */
 nav {
     display: flex; justify-content: space-between; align-items: center;
@@ -32,6 +44,11 @@ nav {
     cursor: pointer; font-weight: bold; margin-top: 10px;
 }
 .btn:hover { background-color: #00f2fe; }
+
+/* .btn-confirm {
+    display: inline-block; bottom: 10px; left: 10px; background-color: #4facfe; color: #fff;
+    padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
+} */
 
 /* --- SECTIONS --- */
 section { padding: 60px 0; border-bottom: 1px solid #222; }

@@ -1,8 +1,8 @@
 <div class="modal-header">
     <h2>Control System for Battery Testing (MITS 11)</h2>
     <div class="modal-meta">
-        <span><strong>Role: </strong>Lead system designer & full stack developer & UX designer</span>
-        <span><strong>Team:</strong> 4 People</span>
+        <span><strong>Role: </strong>Lead UX designer & system designer & full stack developer</span>
+        <span><strong>Team:</strong> 10 People</span>
     </div>
     <div class="modal-meta">
         <span><strong>Architecture: </strong>Event-Driven, Client-Server, Cloud-Native</span>
@@ -14,6 +14,9 @@
 
 <h3>Project Description</h3>
 <p>This project involved re-architecting a legacy desktop-based testing solution into a scalable, web-based distributed system capable of orchestrating simultaneous hardware tests across geographically separated machines.</p>
+<div class="image-container">
+    <img src="../assets/mits11_architecture.png" alt="Description of image" />
+</div>
 
 <!-- <div class="highlight-box">
     <strong>My Goal:</strong> Force players to swap weapons every 5 seconds to maintain optimal damage output.
@@ -34,11 +37,11 @@
     <li><strong>Concurrency Control: </strong>Implemented locking mechanisms and state management to ensure thread safety when multiple users attempt to reserve or control the same hardware channels simultaneously.</li>
 </ul>
 
-<div class="video-container" style="background: #000; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 4px;">
-    <p style="color: #555;">[ In the future, your YouTube Embed Code goes here ]</p>
-</div>
-
-<h3>3. Outcome</h3>
-<p>After playtesting, weapon variety usage increased by <strong>40%</strong>. The system is now fully scalable for future weapon types.</p>
+<h3>3. The Quality Control (QC) Pipeline Engine</h3>
+<p>Designed and implemented a custom evaluation pipeline for automated manufacturing validation.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Domain-Specific Logic: </strong>Engineered a flexible rule-based engine that allows engineers to define "Pass/Fail" criteria using a custom scripting syntax (e.g., dynamic voltage thresholds per second).</li>
+    <li><strong>Real-Time Visualization: </strong>Developed a dashboard that renders live telemetry (Voltage/Current/Capacity) using WebSockets for low-latency updates, enabling operators to monitor hundreds of active channels in a single view.</li>
+</ul>
 <br>
-<a href="#" class="btn">Play Demo on Itch.io</a>
+<a href="https://www.arbin.com/software-solution/overview-mits-11.html" target="_blank" class="btn">Official Mits 11 Website Introduction</a>

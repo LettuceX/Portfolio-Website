@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <h2>Customer Service Portal & ERP Integration</h2>
+    <div class="modal-meta">
+        <span><strong>Role: </strong>Full Stack Developer</span>
+        <span><strong>Team:</strong> 5 People</span> 
+    </div>
+    <div class="modal-meta">
+        <span><strong>Architecture: </strong>Middleware Layer, RESTful API, Legacy Integration</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Key Technologies: </strong>NetSuite API (SuiteTalk), SQL, React, C#/Node.js</span>
+    </div>
+</div>
+
+<h3>Project Description</h3>
+<p>Developed a client-facing web portal to modernize the company's sales and support workflow. The system integrates directly with the legacy NetSuite ERP, transforming a manual email-based process into a self-service platform where customers can configure products, track orders in real-time, and manage support tickets.</p>
+<div class="image-container">
+    <img src="#" alt="Customer Portal Architecture Diagram" />
+</div>
+
+<h3>1. ERP Integration & Middleware</h3>
+<p>Bridged a modern web application with a monolithic internal ERP (NetSuite) to provide a "Single Source of Truth."</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>API Consumption: </strong>Built a middleware layer to consume NetSuite APIs, pulling complex product catalogs, pricing models, and inventory data to display on the customer-facing web portal.</li>
+    <li><strong>Interoperability: </strong>Designed data mapping strategies to resolve schema mismatches between the rigid legacy ERP structure and the flexible modern web database.</li>
+</ul>
+
+<h3>2. Data Synchronization & Consistency</h3>
+<p>Implemented robust synchronization strategies to ensure customers see exactly what the sales team sees.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Caching Strategy: </strong>Developed a local caching system to store read-only copies of order history, eliminating latency from slow ERP queries and ensuring instant page loads for users.</li>
+    <li><strong>Asynchronous Updates: </strong>Utilized background workers to poll for status changes (e.g., "Shipped"), ensuring the portal reflects the live status of physical goods without blocking the user interface.</li>
+</ul>
+
+<h3>3. Context-Aware Support System</h3>
+<p>Replaced generic email workflows with a ticket system tightly coupled to the Order Management module.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Asset Linking: </strong>Created a logic flow that forces support tickets to be linked to specific Order IDs or Asset IDs, automatically pulling the machine’s configuration data for the support engineer.</li>
+    <li><strong>Data Normalization: </strong>Built a sanitization layer to format raw, unstructured historical data from the legacy system into clean, readable UI elements for the customer.</li>
+</ul>
