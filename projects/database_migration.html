@@ -1,0 +1,170 @@
+<style>
+    /* Custom "Chat Style" Code Container */
+    .code-container {
+        background: #1e1e1e; /* Dark background matching VS Code */
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        border: 1px solid #333;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    /* The Top Bar (Language Label) */
+    .code-header {
+        background: #2d2d2d;
+        color: #e0e0e0;
+        padding: 8px 15px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* The Code Area */
+    pre[class*="language-"] {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        padding: 15px !important;
+        background: transparent !important; /* Let container bg show */
+        font-size: 13px;
+        line-height: 1.5;
+        text-shadow: none !important;
+    }
+
+    /* Scrollbar Styling for Code */
+    .code-container pre::-webkit-scrollbar { height: 8px; }
+    .code-container pre::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+    .code-container pre::-webkit-scrollbar-track { background: transparent; }
+</style>
+
+<div class="modal-header">
+    <h2>High-Performance Database Migration & Sharding Utility</h2>
+    <div class="modal-meta">
+        <span><strong>Role: </strong>Backend Systems Developer (Solo Project)</span>
+        <span><strong>Team:</strong> 1 Person</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Architecture: </strong>Layered Services (DAL/Domain/Controller), Async Task-based, Dependency Injection</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Key Technologies: </strong>C# (.NET), MS SQL (T-SQL), SqlBulkCopy, Reflection, ADO.NET</span>
+    </div>
+</div>
+
+<h3>Project Description</h3>
+<p>Designed and engineered a robust utility from scratch to migrate and shard large-scale industrial datasets. The tool automates schema replication and handles complex data merging logic across distributed SQL Server instances.</p>
+
+<h3>1. Architecture & Design Patterns</h3>
+<p>I implemented a strict <strong>Layered Architecture</strong> to prevent monolithic code structures, ensuring the system is testable, maintainable, and scalable.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Separation of Concerns (SoC):</strong> Divided the application into distinct logical layers:
+        <ul>
+            <li><strong>Data Access Layer (DAL):</strong> (<code>SqlServerConnectionService</code>) Handles raw bytes, connection pooling, and bulk copy operations without knowledge of business entities.</li>
+            <li><strong>Domain Service Layer:</strong> (<code>DatabaseInfoService</code>) Encapsulates SQL "Business Logic," translating raw data into meaningful schema information.</li>
+            <li><strong>Orchestration Layer:</strong> (<code>Controller</code>) Manages high-level workflow and state, delegating specific tasks to the underlying services.</li>
+        </ul>
+    </li>
+    <li><strong>Asynchronous-First Design:</strong> Utilized <code>async/await</code> patterns throughout the entire stack to prevent UI thread blocking during heavy I/O operations.</li>
+    <li><strong>Dependency Injection:</strong> Designed the Controller to accept services via constructor injection, enabling easy mocking and unit testing.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">C# - Controller.cs</div>
+    <pre><code class="language-csharp">public class Controller
+{
+    // 1. Separation of Concerns: Dependencies are clearly defined
+    private readonly SqlServerConnectionService _sqlService;
+    private readonly DatabaseInfoService _infoService;
+
+    // 2. Dependency Injection: Services are injected via constructor
+    public Controller(SqlServerConnectionService sqlService, DatabaseInfoService infoService)
+    {
+        _sqlService = sqlService;
+        _infoService = infoService;
+    }
+
+    // 3. Async Orchestration: Managing flow without blocking UI
+    public async Task&lt;bool&gt; MigrateDatabaseAsync(string sourceDB, string targetDB)
+    {
+        var tables = await _infoService.GetAllTableNames(sourceDB);
+        
+        foreach (var table in tables)
+        {
+            await _sqlService.ExecuteNonQueryAsync($"SELECT * INTO {targetDB}...");
+        }
+        return true;
+    }
+}</code></pre>
+</div>
+
+<h3>2. Functional Abstractions (The Delegate Pattern)</h3>
+<p>To adhere to the <strong>DRY (Don't Repeat Yourself)</strong> principle, I utilized the Functional Delegate pattern. Instead of writing duplicate functions for similar queries (e.g., "Copy Table" vs "Replace Table"), I defined a <code>QueryBuilder</code> delegate that injects specific SQL generation logic into a generic worker method.</p>
+
+<div class="code-container">
+    <div class="code-header">C# - Delegate Pattern</div>
+    <pre><code class="language-csharp">// Abstraction allowing different SQL strategies as functions
+public delegate string QueryBuilder(string table, string source, string target, string cols, string id);
+
+private async Task ReplaceTableContent(string table, string sourceDB, string targetDB, string idCol)
+{
+    // Defining behavior as a lambda expression
+    QueryBuilder replaceLogic = (table, source, target, insertCols, selectCols, id) =>
+    {
+        return $@"DELETE FROM {target}.dbo.{table};
+                  INSERT INTO {target}.dbo.{table} ({insertCols})
+                  SELECT {selectCols} FROM {source}.dbo.{table};";
+    };
+
+    // Passing behavior to the generic execution engine
+    InsertRecordsWithQuery(table, sourceDB, targetDB, null, idCol, replaceLogic);
+}</code></pre>
+</div>
+
+<h3>3. Dynamic Schema Replication</h3>
+<p>The tool does not rely on hard-coded schemas. I engineered a service that uses <strong>Reflection and System Metadata</strong> to reconstruct database tables on the fly. This T-SQL generation logic allows the tool to adapt to any database version without recompilation.</p>
+
+<div class="code-container">
+    <div class="code-header">C# & T-SQL - Dynamic Schema Generation</div>
+    <pre><code class="language-csharp">// Uses XML PATH to dynamically construct CREATE TABLE scripts
+string query = $@"
+    SELECT 'CREATE TABLE ' + QUOTENAME('{copytoDB}') + '.dbo.' + QUOTENAME(t.TABLE_NAME) + ' (' +
+        STUFF((SELECT ', ' + QUOTENAME(c.COLUMN_NAME) + ' ' + 
+                CASE 
+                    WHEN c.COLUMN_NAME = @identityColumn THEN 'INT IDENTITY(1,1) NOT NULL'
+                    ELSE c.DATA_TYPE + 
+                        CASE WHEN c.CHARACTER_MAXIMUM_LENGTH = -1 THEN '(MAX)' 
+                        ELSE '(' + CAST(c.CHARACTER_MAXIMUM_LENGTH AS VARCHAR) + ')' END
+                END
+            FROM {copyfromDB}.INFORMATION_SCHEMA.COLUMNS c
+            WHERE c.TABLE_NAME = t.TABLE_NAME
+            FOR XML PATH('')), 1, 2, '') + 
+        ')'
+    FROM {copyfromDB}.INFORMATION_SCHEMA.TABLES t";</code></pre>
+</div>
+
+<h3>4. High-Performance Data Pipeline</h3>
+<p>Optimized the data transfer layer to handle millions of rows. I implemented a smart pagination system that transforms data streams in-memory (e.g., re-mapping Identity IDs) before committing them via <code>SqlBulkCopy</code>.</p>
+
+<div class="code-container">
+    <div class="code-header">C# - Async Batching</div>
+    <pre><code class="language-csharp">// Handles memory-efficient batching (50k rows) with modification
+while (hasRows)
+{
+    // Window functions used for precise pagination
+    string selectBatchQuery = $@"
+        SELECT * FROM (
+            SELECT *, ROW_NUMBER() OVER (ORDER BY [{validColumn}]) AS RowNum
+            FROM {sourceDB}.dbo.{table}
+        ) AS Res WHERE RowNum BETWEEN {offset + 1} AND {offset + 50000};";
+
+    // Async fetch -> In-Memory Transformation -> Bulk Write
+    DataTable dataTable = await ReadNModifyColValue(selectBatchQuery);
+    
+    if (dataTable?.Rows.Count > 0) {
+        await _sqlService.ExecuteBulkInsert(targetDB, table, dataTable, identityColumn);
+        offset += 50000;
+    }
+}</code></pre>
+</div>

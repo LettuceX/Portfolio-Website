@@ -1,0 +1,191 @@
+<style>
+    /* Custom "Chat Style" Code Container */
+    .code-container {
+        background: #1e1e1e; /* Dark background matching VS Code */
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        border: 1px solid #333;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    /* The Top Bar (Language Label) */
+    .code-header {
+        background: #2d2d2d;
+        color: #e0e0e0;
+        padding: 8px 15px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* The Code Area */
+    pre[class*="language-"] {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        padding: 15px !important;
+        background: transparent !important; /* Let container bg show */
+        font-size: 13px;
+        line-height: 1.5;
+        text-shadow: none !important;
+    }
+
+    /* Scrollbar Styling for Code */
+    .code-container pre::-webkit-scrollbar { height: 8px; }
+    .code-container pre::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+    .code-container pre::-webkit-scrollbar-track { background: transparent; }
+</style>
+
+<div class="modal-header">
+    <h2>Battery Test Schedule Parser & Physics Simulator</h2>
+    <div class="modal-meta">
+        <span><strong>Role: </strong>Backend Systems Developer (Solo Project)</span>
+        <span><strong>Team:</strong> 1 Person</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Architecture: </strong>Modular Engine, Finite State Machine (FSM), Data-Driven Physics Model</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Key Technologies: </strong>C# (.NET), JSON Serialization, Regex/Parsing, LINQ, Physics Modeling</span>
+    </div>
+</div>
+
+<h3>Project Description</h3>
+<p>Developed a comprehensive dual-module system to modernize the battery testing workflow. The <strong>Parser</strong> module reverse-engineered a legacy proprietary schedule format (.sdx) to convert it into structured JSON. The <strong>Simulator</strong> module utilizes a custom physics engine to predict battery behavior (Voltage, Current, SOC) in real-time, allowing engineers to validate complex testing logic before running actual hardware.</p>
+
+<h3>1. The Simulation Engine (State Machine)</h3>
+<p>The core of the simulator is a deterministic loop that functions identically to a <strong>Game Loop</strong>. It processes testing schedules step-by-step, calculating physics updates at precise time intervals (ticks) while monitoring for exit conditions.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Step Execution Loop:</strong> Implemented a <code>while</code> loop that iterates through test steps, applying time-deltas to the battery model to simulate charging/discharging cycles.</li>
+    <li><strong>Limit Detection:</strong> Similar to "Collision Detection" in games, the engine checks for safety violations (Over-Voltage, Over-Temperature) or Step Transitions (Time Limit reached) after every simulation frame.</li>
+    <li><strong>Complex Flow Control:</strong> Engineered logic to handle nested loops (Cyclic Voltammetry), conditional jumps (<code>GOTO</code> steps), and file-based external simulation playback.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">C# - Simulator.cs (The Main Loop)</div>
+    <pre><code class="language-csharp">public SimulateData Simulate(UserInput? userInput = null)
+{
+    var currentStep = _scheduleProvider.Schedule.Steps.FirstOrDefault();
+
+    // The "Game Loop": Runs until there are no more steps to execute
+    while (currentStep != null)
+    {
+        // 1. Execute the Physics for the current step (Tick)
+        var stepDataPoints = SimulateStep(currentStep, simulateData.StepData.LastOrDefault());
+
+        // 2. Check for Safety Violations ("Game Over")
+        DataPoint? firstUnsafeDataPoint = stepDataPoints.FirstOrDefault(dp => dp.IsUnsafe);
+        if (firstUnsafeDataPoint != null)
+        {
+            stepData.IsUnsafe = true;
+            break; // Stop simulation immediately
+        }
+
+        // 3. Determine Next State (Step Transition)
+        _ = Step.HasReachedStepLimit(_scheduleProvider, currentStep, stepDataPoints?.LastOrDefault(), stepData.Duration, out StepLimit? triggeredLimit);
+        
+        // 4. State Transition (Load Next Level/Step)
+        currentStep = _scheduleProvider.GetNextStep(currentStep, triggeredLimit);
+    }
+    return simulateData;
+}</code></pre>
+</div>
+
+<h3>2. Data-Driven Physics Modeling</h3>
+<p>Built a <code>DataProcessor</code> engine to handle the "Physics" of the battery. It abstracts complex electrical formulas into a clean, modular logic layer.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Physics Abstraction:</strong> Decoupled the math from the execution loop. The engine calculates the battery's response (Current/Voltage) based on the active control mode (e.g., Constant Power, Load Simulation, Voltage Ramp) using standardized physics formulas.</li>
+    <li><strong>Safety & Clamping:</strong> Implemented a "Clamping" system that constrains output values within safe physical limits, preventing the simulation from producing unrealistic or dangerous data points.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">C# - SimulatorLogics.cs (Physics Engine)</div>
+    <pre><code class="language-csharp">public double UpdateCurrentValue(Step step, DataPoint? lastPoint, double stepTime)
+{
+    // Physics calculation based on Control Mode
+    switch (step.Type)
+    {
+        case StepType.Rest:
+            return 0; // Open Circuit
+
+        case StepType.Power: // I = P / V
+            return Utility.SafeDivide(controlValue, prevVoltage, "Voltage is zero!");
+
+        case StepType.Load: // I = V / R
+            return Utility.SafeDivide(-prevVoltage, controlValue, "Load is zero!");
+
+        case StepType.VoltageRamp: // dV/dt calculation
+            return CalculateVoltageRampCurrent(controlValue, extraControlValue1, stepTime, prevOCV);
+
+        case StepType.CCCV: // Constant Current / Constant Voltage Hybrid
+            if (!step.IsCVMode) return controlValue; // CC Phase
+            else return Utility.SafeDivide(targetVoltage - prevOCV, _userInput.IR, "IR is zero!");
+            
+        default:
+            throw new NotImplementedException($"Unknown physics model: {step.Type}");
+    }
+}</code></pre>
+</div>
+
+<h3>3. Functional Action Mapping (Optimization)</h3>
+<p>To handle dynamic variable updates (e.g., "Reset Capacity" or "Increment Cycle Counter") efficiently, I avoided using monolithic <code>switch-case</code> statements.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>O(1) Action Lookups:</strong> I utilized a <code>Dictionary&lt;string, Action&gt;</code> pattern to map string identifiers directly to executable lambda functions. This allows the simulator to look up and execute state changes in constant time, significantly optimizing performance during high-frequency simulation steps.</li>
+</ul>
+
+<div class="code-container">
+    <div class="code-header">C# - ActionMappingProvider.cs</div>
+    <pre><code class="language-csharp">public static Dictionary&lt;string, Action&lt;double&gt;&gt; GetSetValueMappings(ScheduleProvider provider)
+{
+    // Mapping string keys directly to Lambda Actions for O(1) lookup
+    return new Dictionary&lt;string, Action&lt;double&gt;&gt;
+    {
+        ["PV_CHAN_Charge_Capacity"] = val => provider.UpdatePVFields(pv => pv.PV_CHAN_Charge_Capacity = val),
+        ["TC_Charge_Energy1"] = val => provider.UpdateTCFields(tc => tc.TC_Charge_Energy1 = val),
+        ["MV_UD1"] = val => provider.UpdateMVFields(mv => mv.MV_UD1 = val),
+        // ... mapped to 50+ other internal variables
+    };
+}</code></pre>
+</div>
+
+<h3>4. Legacy Parsing & Serialization</h3>
+<p>Reverse-engineered the company's legacy file format to build a robust parser. I wrote custom logic to parse line-by-line using string splitting and Regex to extract key-value pairs, nested sections, and dynamic equations from the raw <code>.sdx</code> files.</p>
+
+<div class="code-container">
+    <div class="code-header">C# - ScheduleParser.cs</div>
+    <pre><code class="language-csharp">private List&lt;Step&gt; ParseStepsFromFile(string filePath)
+{
+    var steps = new List&lt;Step&gt;();
+    Step? currentStep = null;
+
+    foreach (var line in File.ReadLines(filePath))
+    {
+        string trimmedLine = line.Trim();
+
+        // 1. Detect Step Start
+        if (trimmedLine.StartsWith("[Schedule_Step") && !trimmedLine.Contains("_Limit"))
+        {
+            if (currentStep != null) steps.Add(currentStep); // Save previous
+            // Parse Step ID from header
+            currentStep = new Step { Id = ParseStepId(trimmedLine) }; 
+            continue;
+        }
+
+        // 2. Parse Key-Value Pairs
+        string[] parts = trimmedLine.Split('=', 2);
+        if (parts.Length == 2 && currentStep != null)
+        {
+            switch (parts[0].Trim())
+            {
+                case "m_szLabel": currentStep.Label = parts[1].Trim(); break;
+                case "m_szStepCtrlType": currentStep.Type = parts[1].Trim(); break;
+                // ... handle controls
+            }
+        }
+    }
+    return steps;
+}</code></pre>
+</div>
