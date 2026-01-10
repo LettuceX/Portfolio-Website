@@ -1,0 +1,105 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+<style>
+    /* Tag Style for Design Tools */
+    .tool-tag {
+        display: inline-block;
+        background: #333;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-family: sans-serif;
+    }
+    
+    /* Before/After Container */
+    .ux-comparison {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    .ux-box {
+        flex: 1;
+        background: #222;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+    }
+    .ux-title {
+        color: #888;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+
+<div class="modal-header">
+    <h2>MITS 11: Enterprise UX/UI Modernization</h2>
+    <div class="modal-meta">
+        <span><strong>Role: </strong>Lead UX Researcher & UI Designer</span>
+        <span><strong>Focus: </strong>Data Visualization, Workflow Automation, Cognitive Load Management</span>
+    </div>
+    <div class="modal-meta">
+        <span><strong>Tools: </strong>
+            <span class="tool-tag">Figma</span>
+            <span class="tool-tag">Adobe XD</span>
+            <span class="tool-tag">User Interviews</span>
+            <span class="tool-tag">Design Systems</span>
+        </span>
+    </div>
+</div>
+
+<h3>Design Challenge</h3>
+<p>Battery testing involves monitoring hundreds of concurrent high-frequency data streams (Voltage, Current, Temperature) across distributed hardware. The legacy desktop interface was cluttered and tabular, causing high <strong>cognitive load</strong> for engineers trying to identify critical hardware failures in real-time.</p>
+
+<h3>1. Information Architecture: The Macro-Micro Pattern</h3>
+<p>My primary goal was to reduce the "Time to Insight" for operators monitoring large-scale labs. I restructured the application into a tiered information hierarchy to manage data density:</p>
+<div class="ux-comparison">
+    <div class="ux-box">
+        <span class="ux-title">Macro View (Aggregate Dashboard)</span>
+        <p>A high-level "Command Center" dashboard that aggregates status across 100+ channels. I utilized "Management by Exception" principles—using color (Green/Red/Amber) to draw attention solely to anomalies, allowing operators to ignore healthy systems.</p>
+    </div>
+    <div class="ux-box">
+        <span class="ux-title">Micro View (Granular Analysis)</span>
+        <p>Drill-down views for specific channels. Prioritizes real-time telemetry graphs and interactive scrubbing, enabling engineers to perform root-cause analysis on specific hardware events.</p>
+    </div>
+</div>
+
+<h3>2. No-Code Workflow Automation (Schedule Editor)</h3>
+<p>Engineers needed a flexible way to program complex testing logic (Loops, Conditional Branching) without writing raw script code. I designed a <strong>Drag-and-Drop Visual Editor</strong> that visualizes the test procedure as a linear timeline.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Visual Validation:</strong> Steps are represented as modular blocks that snap together. I designed validation logic that visually highlights invalid connections (error states) immediately, preventing runtime errors.</li>
+    <li><strong>Contextual Configuration:</strong> Clicking a block reveals a context-sensitive properties panel, keeping the main canvas clean and focused on the logic flow rather than parameter clutter.</li>
+</ul>
+
+<h3>3. Atomic Design System</h3>
+<p>To ensure consistency across the web platform, I established a comprehensive Design System in <strong>Figma</strong>. This atomic design approach improved development velocity and maintained visual unity across disparate modules.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Component Library:</strong> Standardized interactive elements (Inputs, Toggles, Dropdowns) with clearly defined hover, active, and disabled states.</li>
+    <li><strong>Accessible Data Viz:</strong> Created a semantic color palette specifically for high-density charts, ensuring distinct line visibility and high contrast for accessibility compliance.</li>
+</ul>
+
+<h3>4. User-Centered Research & Iteration</h3>
+<p>The design process was iterative, driven by direct feedback loops with internal hardware engineers.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Pain Point Discovery:</strong> User interviews revealed that engineers frequently lost mental context of which "Virtual Channel" corresponded to which "Physical Rack Unit."</li>
+    <li><strong>Spatial Mapping Solution:</strong> I introduced a "Channel Map" visualization—a graphical grid mirroring the physical rack layout—allowing users to select units spatially, reducing selection errors by ~40%.</li>
+</ul>
+
+<h3>5. Resource Allocation & Orchestration</h3>
+<p>A critical challenge was enabling users to bundle channels from different physical machines into a single "Test Task." I designed a centralized Resource Management interface.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Drag-and-Drop Provisioning:</strong> Users can drag available channels from a global pool into a "Task Bucket," visually grouping disparate hardware resources into a single logical unit.</li>
+    <li><strong>Conflict Resolution UI:</strong> If a user selects a channel that is currently occupied, the UI provides a clear "Reserved" state with a tooltip estimating availability, preemptively resolving scheduling conflicts.</li>
+</ul>
+
+<h3>6. Diagnostic Reporting & QC</h3>
+<p>For the Quality Control pipeline, I designed a comprehensive "Validation Report" view that transforms raw data into an actionable Pass/Fail verdict.</p>
+<ul style="margin-left: 20px; margin-bottom: 20px;">
+    <li><strong>Root Cause Visualization:</strong> A specialized view that pinpoints exactly <em>why</em> a battery failed QC (e.g., highlighting specific timestamps where Voltage dropped below threshold).</li>
+    <li><strong>Benchmark Overlays:</strong> Designed a comparative feature allowing users to overlay current results against a "Golden Sample" (ideal benchmark), facilitating instant visual quality assurance.</li>
+</ul>
